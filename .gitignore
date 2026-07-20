@@ -1,0 +1,19 @@
+# Compiled Java & Maven
+target/
+*.class
+*.jar
+*.war
+
+# Node Dependencies & Build Output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Logs & Temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.idea/
+*.iml
