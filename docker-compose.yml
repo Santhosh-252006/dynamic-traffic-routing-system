@@ -24,12 +24,9 @@ services:
       dockerfile: Dockerfile
     container_name: traffic_backend
     ports:
-      - "8080:8080"
+      - "8085:8085"
     environment:
-      SPRING_PROFILES_ACTIVE: postgres
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/trafficdb
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgrespassword
+      DATABASE_URL: postgresql://postgres:postgrespassword@postgres:5432/trafficdb
       JWT_SECRET: 9a2f8c4e6b1d3a5f7e9c2b4a6d8f1e3c5b7a9d2f4e6b8c1a3f5e7d9b2c4a6f8e
     depends_on:
       postgres:

@@ -1,8 +1,12 @@
-# Compiled Java & Maven
-target/
-*.class
-*.jar
-*.war
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+backend/venv/
+backend-python/venv/
+*.db
+.pytest_cache/
 
 # Node Dependencies & Build Output
 node_modules/
@@ -17,13 +21,4 @@ Thumbs.db
 # IDE settings
 .idea/
 *.iml
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-venv/
-backend-python/venv/
-*.db
-.pytest_cache/
-
+.vscode/

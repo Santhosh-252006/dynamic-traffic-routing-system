@@ -1,6 +1,6 @@
 # Dynamic Traffic Routing System
 
-A full-stack, enterprise-grade **Dynamic Traffic Routing System** built with **Java 21 + Spring Boot 3.2+**, **React 18 + Vite + Tailwind CSS**, **Dijkstra's Algorithm**, and **Spring Security JWT Authentication**.
+A full-stack, enterprise-grade **Dynamic Traffic Routing System** built with **Python 3.11+ (FastAPI + SQLAlchemy)**, **React 18 + Vite + Tailwind CSS**, **Dijkstra's Algorithm**, and **JWT Authentication**.
 
 The system simulates real-time city traffic conditions, calculates optimal **Shortest** and **Fastest** routes, supports dynamic road closure handling, renders an interactive Canvas/SVG traffic map with animated vehicle particle flows and heatmaps, and provides analytics reports.
 
@@ -9,7 +9,7 @@ The system simulates real-time city traffic conditions, calculates optimal **Sho
 ## 🚀 Key Features
 
 1. **Graph-Based Route Optimization (Dijkstra's Algorithm)**:
-   - **Shortest Route**: Minimized distance ($\text{km}$).
+   - **Shortest Route**: Minimized physical distance ($\text{km}$).
    - **Fastest Route**: Minimized travel time ($\text{mins}$) factoring in distance, speed limit ($\text{km/h}$), and dynamic traffic congestion multipliers.
    - **Closed Road Handling**: Closed corridors are assigned infinite weight ($\infty$) and automatically bypassed by Dijkstra.
    - **Alternate Routes**: Penalty-based alternate path finder.
@@ -38,10 +38,10 @@ The system simulates real-time city traffic conditions, calculates optimal **Sho
 
 ## 🛠 Technology Stack
 
-- **Backend**: Java 21, Spring Boot 3.2.3, Spring Data JPA, Spring Security, JJWT (0.12.5), Maven.
+- **Backend**: Python 3.11+, FastAPI, SQLAlchemy, Pydantic v2, Python-Jose (JWT), Passlib (BCrypt), Uvicorn.
 - **Frontend**: React 18, Vite, Tailwind CSS, Lucide Icons, Recharts, Axios.
-- **Database**: H2 In-Memory DB (Default zero-dependency mode) / PostgreSQL 16 (Docker Compose mode).
-- **API Specs**: OpenAPI 3.0 / Swagger UI.
+- **Database**: SQLite (Default zero-dependency mode: `traffic.db`) / PostgreSQL 16 (Docker Compose mode).
+- **API Specs**: OpenAPI 3.0 / Swagger UI (`/docs`) & ReDoc (`/redoc`).
 - **Deployment**: Docker & Docker Compose multi-stage builds.
 
 ---
@@ -79,20 +79,23 @@ $$\text{Travel Time (minutes)} = \left( \frac{\text{Distance}}{\text{Effective S
 
 ```
 dynamic-traffic-routing-system/
-├── backend/                        # Spring Boot Java 21 Backend
-│   ├── src/main/java/com/traffic/
+├── backend/                        # Python FastAPI Backend
+│   ├── app/
 │   │   ├── algorithm/              # Core Dijkstra Algorithm implementation
-│   │   ├── config/                 # Security, Web CORS, Swagger, DatabaseInitializer
-│   │   ├── controller/             # REST Controllers (Auth, Road, Traffic, Route, Reports)
-│   │   ├── dto/                    # Request/Response Data Transfer Objects
-│   │   ├── exception/              # Global Exception Handler & Custom Errors
-│   │   ├── model/                  # JPA Entities (User, Road, Intersection, RouteHistory, AuditLog)
-│   │   ├── repository/             # JPA Data Repositories
-│   │   ├── security/               # JWT Token Provider, Filters, UserDetails
-│   │   └── service/                # Business & Optimization Logic Services
-│   ├── src/test/java/              # JUnit 5 & Mockito Unit Tests
-│   ├── pom.xml                     # Maven Dependencies
-│   └── Dockerfile                  # Multi-stage Java Dockerfile
+│   │   ├── routers/                # REST API Routers (Auth, Roads, Traffic, Routes, Reports, Audit)
+│   │   ├── services/               # Business logic & Dijkstra route orchestration
+│   │   ├── config.py               # Environment & JWT settings
+│   │   ├── database.py             # SQLAlchemy session & engine
+│   │   ├── models.py               # Database ORM models
+│   │   ├── schemas.py              # Pydantic v2 schemas / DTOs
+│   │   ├── security.py             # JWT bearer auth & BCrypt hashing
+│   │   ├── seed.py                 # Initial seed dataset (12 intersections, 21 roads)
+│   │   └── main.py                 # FastAPI application entrypoint
+│   ├── tests/                      # Automated Pytest test suite
+│   │   ├── test_dijkstra.py        # Dijkstra unit tests
+│   │   └── test_api.py             # REST API integration tests
+│   ├── Dockerfile                  # Python Docker container configuration
+│   └── requirements.txt            # Python dependencies
 ├── frontend/                       # React 18 + Vite Frontend
 │   ├── src/
 │   │   ├── api/                    # Axios API client with JWT interceptors
@@ -103,7 +106,7 @@ dynamic-traffic-routing-system/
 │   │   └── main.jsx
 │   ├── package.json
 │   └── Dockerfile
-├── docker-compose.yml              # PostgreSQL + Spring Boot + Nginx Compose setup
+├── docker-compose.yml              # PostgreSQL + Python FastAPI + React Nginx setup
 ├── schema.sql                      # Standalone SQL DDL Schema
 ├── data.sql                        # Standalone SQL Seed Data
 └── Dynamic_Traffic_Routing_System.postman_collection.json
@@ -113,16 +116,23 @@ dynamic-traffic-routing-system/
 
 ## ⚡ How to Build & Run Locally
 
-### Option A: Standard Dev Server (Zero Dependency - Embedded H2)
+### Option A: Standard Dev Server (Zero Dependency - SQLite)
 
-#### 1. Start Spring Boot Backend:
+#### 1. Start Python FastAPI Backend:
 ```bash
 cd backend
-mvn spring-boot:run
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On Linux/Mac:
+source venv/bin/activate
+
+pip install -r requirements.txt
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8085 --reload
 ```
-- Backend API will start at: `http://localhost:8080`
-- Swagger OpenAPI Specs: `http://localhost:8080/swagger-ui.html`
-- H2 Console: `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:trafficdb`, Username: `sa`, Password: *empty*)
+- Backend API: `http://localhost:8085`
+- Interactive Swagger UI: `http://localhost:8085/docs`
+- ReDoc Docs: `http://localhost:8085/redoc`
 
 #### 2. Start React Frontend:
 ```bash
@@ -130,27 +140,27 @@ cd frontend
 npm install
 npm run dev
 ```
-- Frontend UI will start at: `http://localhost:3000`
+- Frontend UI: `http://localhost:3000`
 
 ---
 
-### Option B: Docker Compose (Spring Boot + PostgreSQL 16 + React Nginx)
+### Option B: Docker Compose (FastAPI + PostgreSQL 16 + React Nginx)
 
 Run the entire full-stack system with PostgreSQL via Docker Compose:
 ```bash
 docker-compose up --build -d
 ```
 - Access Frontend UI at `http://localhost:3000`
-- Access Backend API at `http://localhost:8080`
+- Access Backend API at `http://localhost:8085`
 
 ---
 
 ## 🧪 Running Unit Tests
 
-To verify Dijkstra route calculation unit tests:
+To verify Dijkstra route calculations and REST API endpoints:
 ```bash
 cd backend
-mvn clean test
+python -m pytest -v
 ```
 
 ---
@@ -163,7 +173,7 @@ mvn clean test
 | `POST` | `/api/auth/login` | Authenticate user & return JWT | Public |
 | `GET` | `/api/roads` | Fetch all road corridors | Public |
 | `GET` | `/api/intersections` | Fetch graph nodes/intersections | Public |
-| `POST` | `/api/routes/find` | Calculate Dijkstra route (Shortest/Fastest) | Bearer JWT |
+| `POST` | `/api/routes/find` | Calculate Dijkstra route (Shortest/Fastest) | Public / Bearer JWT |
 | `GET` | `/api/routes/history` | Get route calculation history | Bearer JWT |
 | `PUT` | `/api/traffic/{roadId}` | Update road traffic level / status | Admin Only |
 | `POST` | `/api/traffic/simulate` | Trigger real-time traffic flux | Admin Only |

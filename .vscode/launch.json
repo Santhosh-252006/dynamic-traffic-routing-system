@@ -2,11 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "java",
-      "name": "Launch Spring Boot Backend",
+      "name": "Python: FastAPI Backend",
+      "type": "debugpy",
       "request": "launch",
-      "mainClass": "com.traffic.DynamicTrafficRoutingApplication",
-      "projectName": "dynamic-traffic-routing",
+      "module": "uvicorn",
+      "args": [
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8085",
+        "--reload"
+      ],
       "cwd": "${workspaceFolder}/backend"
     }
   ]
