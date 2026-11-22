@@ -17,3 +17,13 @@ Thumbs.db
 # IDE settings
 .idea/
 *.iml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+backend-python/venv/
+*.db
+.pytest_cache/
+
