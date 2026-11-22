@@ -1,5 +1,12 @@
 # Dynamic Traffic Routing System
 
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+
 A full-stack, enterprise-grade **Dynamic Traffic Routing System** built with **Python 3.11+ (FastAPI + SQLAlchemy)**, **React 18 + Vite + Tailwind CSS**, **Dijkstra's Algorithm**, and **JWT Authentication**.
 
 The system simulates real-time city traffic conditions, calculates optimal **Shortest** and **Fastest** routes, supports dynamic road closure handling, renders an interactive Canvas/SVG traffic map with animated vehicle particle flows and heatmaps, and provides analytics reports.
